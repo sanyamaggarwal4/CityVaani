@@ -244,7 +244,7 @@ export default function LoginPage() {
                                     <input
                                         className="cv-input"
                                         type="text"
-                                        placeholder="6-digit pin"
+                                        placeholder="8-digit pin"
                                         value={otp}
                                         onChange={(e) => setOtp(e.target.value)}
                                         required
