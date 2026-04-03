@@ -215,7 +215,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
                 const avatar_url = session.user.user_metadata?.avatar_url;
 
                 // Sync with cv_users database table to persist and load role
-                let userRole: UserRole = 'citizen';
+                let userRole: UserRole = (session.user.user_metadata?.role as UserRole) || 'citizen';
                 const { data: existingUser } = await supabase.from('cv_users').select('*').eq('email', email).single();
 
                 if (!existingUser) {
@@ -224,10 +224,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
                         id: newId,
                         name,
                         email,
-                        role: 'citizen',
+                        role: userRole,
                         avatar_url
                     });
-                    setCurrentUser({ id: newId, name, email, role: 'citizen', avatar_url } as User);
+                    setCurrentUser({ id: newId, name, email, role: userRole, avatar_url } as User);
                 } else {
                     userRole = existingUser.role as UserRole;
                     setCurrentUser({ id: existingUser.id, name: existingUser.name, email: existingUser.email, role: userRole, avatar_url } as User);
@@ -299,10 +299,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const logout = useCallback(async () => {
         localStorage.removeItem('cv-guest');
-        if (HAS_SUPABASE) {
-            await supabase.auth.signOut();
-        }
         setCurrentUser(null);
+        if (HAS_SUPABASE) {
+            try {
+                await supabase.auth.signOut();
+            } catch (e) {
+                console.warn('[CityVaani] Silent Supabase logout failed:', e);
+            }
+        }
     }, []);
 
     const setRole = useCallback((role: UserRole) => {
