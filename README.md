@@ -18,7 +18,7 @@
 * **React 18 & TypeScript:** Built entirely on modern React functional components with strictly typed interfaces to prevent runtime errors.
 * **Vite:** High-performance, lightning-fast frontend tooling and bundler.
 * **React Router v6:** Seamless Client-Side Routing mapping out the Citizen vs Authority dashboards securely.
-* **Custom Pure CSS:** Completely bespoke CSS design system utilizing dynamic Custom Properties (`var(--)`) and localized scoped class names. No bulky Tailwind/Bootstrap dependencies.
+* **UI Component Library:** Leverages Shadcn UI design principles alongside custom CSS to build highly reusable, accessible, and beautiful modern components.
 
 ### Backend & Cloud Architecture (Supabase)
 * **PostgreSQL Database:** Supabase Postgres used to safely store persistent `/cv_users` profiles and `/cv_issues` logs securely.
