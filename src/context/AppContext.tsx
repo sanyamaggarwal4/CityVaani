@@ -316,8 +316,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
             const now = new Date().toISOString();
             const id = `i-${Date.now()}`;
 
+            let geocodeLat = draft.location.lat;
+            let geocodeLng = draft.location.lng;
+
+            if (!geocodeLat || !geocodeLng) {
+                try {
+                    const query = encodeURIComponent(`${draft.location.area}, Delhi, India`);
+                    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        geocodeLat = parseFloat(data[0].lat);
+                        geocodeLng = parseFloat(data[0].lon);
+                    }
+                } catch (e) {
+                    console.warn('[CityVaani] Geocoding failed:', e);
+                }
+            }
+
             const newIssue: Issue = {
                 ...draft,
+                location: {
+                    ...draft.location,
+                    lat: geocodeLat,
+                    lng: geocodeLng
+                },
                 id,
                 upvotes: 0,
                 upvotedBy: [],
